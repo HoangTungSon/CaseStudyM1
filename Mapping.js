@@ -20,7 +20,7 @@ function createObject(numberOfObject) {
     }
 }
 let numberOfObject = 15;
-let objectFallingIncrease = 5;
+let objectFallingIncrease = 2;
 
 function createFallingObject(numberOfFallObject) {
     for(let i = 1; i < numberOfFallObject; i++ ){
