@@ -12,21 +12,61 @@ function Rectangle(height, jumping, width, x, y, x_velocity, y_velocity) {
     this.y_velocity = y_velocity;
     this.y = y;
 
+
+    this.getHeight = function () {
+        return this.height;
+    };
+
+    this.getJump = function () {
+        return this.jumping;
+    };
+
+    this.setJump = function (state) {
+        this.jumping = state;
+    };
+
+    this.getWidth = function () {
+        return this.width;
+    };
+
+    this.setX = function (num) {
+        this.x = num;
+    };
+
+    this.getX = function () {
+        return this.x;
+    };
+
+    this.setY = function (num) {
+        this.y = num;
+    };
+
+    this.getY = function () {
+        return this.y;
+    };
+
+    this.setX_velocity = function (num) {
+        this.x_velocity = num;
+    };
+
+    this.getX_velocity = function () {
+        return this.x_velocity;
+    };
+
+    this.setY_velocity = function (num) {
+        this.y_velocity = num;
+    };
+
+    this.getY_velocity = function () {
+        return this.y_velocity;
+    };
+
+
     this.show = function (context) {
-        // context.fillStyle = "#202020";
-        // context.fillRect(0, 0, context.canvas.width, context.canvas.height);
         context.fillStyle = "blue";
         context.beginPath();
         context.rect(this.x, this.y, this.width, this.height);
         context.fill();
-
-        // context.strokeStyle = "#202830";
-        // context.lineWidth = 4;
-        // context.beginPath();
-        // context.moveTo(0, context.canvas.height - DEFAULT_LINE);
-        // context.lineTo(context.canvas.width, context.canvas.height - DEFAULT_LINE);
-        // context.stroke();
-
 
     }
 }

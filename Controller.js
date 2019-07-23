@@ -3,6 +3,17 @@ function Controller(left, right, up){
     this.right = right;
     this.up = up;
 
+    this.getLeft = function () {
+        return this.left;
+    };
+
+    this.getRight = function () {
+        return this.right;
+    };
+
+    this.getUp = function () {
+        return this.up;
+    };
     this.keyListener = function (event) {
         let key_state = (event.type === "keydown");
         switch(event.keyCode) {

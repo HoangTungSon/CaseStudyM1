@@ -3,7 +3,7 @@ const DEFAULT_FRICTION = 0.9;
 const DEFAULT_GRAVITY = 1;
 const DEFAULT_RECTANGLE_WIDTH = 20;
 const DEFAULT_RECTANGLE_HEIGHT = 20;
-const DEFAULT_SCORE_WIN = 10;
+const DEFAULT_SCORE_WIN = 50;
 const DEFAULT_COUNT_NEXT_CHALLENGE = 2;
 
 function GameBoard() {
@@ -16,90 +16,89 @@ function GameBoard() {
 
     this.checkCondition = function () {
         // ----------------- controlling ------------------
-        if (this.controller.up && this.rectangle.jumping === true) {
-            this.rectangle.y_velocity -= DEFAULT_GRAVITY * DEFAULT_RECTANGLE_HEIGHT * 1.5;
-            this.rectangle.jumping = false;
+        if (this.controller.getUp() && this.rectangle.getJump() === true) {
+            this.rectangle.setY_velocity(this.rectangle.getY_velocity() - DEFAULT_GRAVITY * DEFAULT_RECTANGLE_HEIGHT * 2);
+            this.rectangle.setJump(false);
         }
 
-        if (this.controller.left) {
-            this.rectangle.x_velocity -= DEFAULT_VELOCITY;
+        if (this.controller.getLeft()) {
+            this.rectangle.setX_velocity(this.rectangle.getX_velocity() - DEFAULT_VELOCITY);
         }
 
-        if (this.controller.right) {
-            this.rectangle.x_velocity += DEFAULT_VELOCITY;
+        if (this.controller.getRight()) {
+            this.rectangle.setX_velocity(this.rectangle.getX_velocity() + DEFAULT_VELOCITY);
+
         }
 
-        this.rectangle.y_velocity += DEFAULT_GRAVITY;// gravity
-        this.rectangle.x += this.rectangle.x_velocity;
-        this.rectangle.y += this.rectangle.y_velocity;
-        this.rectangle.x_velocity *= DEFAULT_FRICTION;// friction
-        this.rectangle.y_velocity *= DEFAULT_FRICTION;// friction
+        this.rectangle.setY_velocity(this.rectangle.getY_velocity() + DEFAULT_GRAVITY);
+        this.rectangle.setX(this.rectangle.getX() + this.rectangle.getX_velocity());
+        this.rectangle.setY(this.rectangle.getY() + this.rectangle.getY_velocity());
+        this.rectangle.setX_velocity(this.rectangle.getX_velocity()*DEFAULT_FRICTION);
+        this.rectangle.setY_velocity(this.rectangle.getY_velocity()*DEFAULT_FRICTION);
 
         // if rectangle is going off the left of the screen
-        if (this.rectangle.x < -this.rectangle.width) {
-            this.rectangle.x = this.context.canvas.width;
+        if (this.rectangle.getX < -this.rectangle.getWidth()) {
+            this.rectangle.setX(this.context.canvas.width);
 
             // if rectangle goes past right boundary
-        } else if (this.rectangle.x > this.context.canvas.width) {
-            this.rectangle.x = -this.rectangle.width;
+        } else if (this.rectangle.getX > this.context.canvas.width) {
+            this.rectangle.setX(-this.rectangle.getWidth());
         }
 
         //-------- check player moving on screen ---------
         for (let i = 0; i < this.map.arrPaddle.length; i++) {
             // if rectangle is falling below floor line
-            if (this.rectangle.y > this.context.canvas.height - this.rectangle.width) {
+            if (this.rectangle.getY() > this.context.canvas.height - this.rectangle.getWidth()) {
 
-                this.rectangle.jumping = true;
-                this.rectangle.y = this.context.canvas.height - this.rectangle.width;
-                this.rectangle.y_velocity = 0;
+                this.rectangle.setJump(true);
+                this.rectangle.setY(this.context.canvas.height - this.rectangle.getWidth());
+                this.rectangle.setY_velocity(0);
 
                 // fall and stay on the objects
-            } else if (this.rectangle.y > this.map.arrPaddle[i].y - this.rectangle.height &&
-                this.rectangle.y < this.map.arrPaddle[i].y &&
-                this.rectangle.x < this.map.arrPaddle[i].x + this.map.arrPaddle[i].w &&
-                this.rectangle.x > this.map.arrPaddle[i].x - this.rectangle.width) {
+            } else if (this.rectangle.getY() > this.map.arrPaddle[i].getY() - this.rectangle.getHeight() &&
+                this.rectangle.getY() < this.map.arrPaddle[i].getY() &&
+                this.rectangle.getX() < this.map.arrPaddle[i].getX() + this.map.arrPaddle[i].w &&
+                this.rectangle.getX() > this.map.arrPaddle[i].getX() - this.rectangle.width) {
 
-                this.rectangle.jumping = true;
-                this.rectangle.y = this.map.arrPaddle[i].y - this.rectangle.height;
-                this.rectangle.y_velocity = 0;
+                this.rectangle.setJump(true);
+                this.rectangle.setY(this.map.arrPaddle[i].getY() - this.rectangle.getHeight());
+                this.rectangle.setY_velocity(0);
 
                 //not jump though the objects
-            } else if (this.rectangle.y > this.map.arrPaddle[i].y + this.map.arrPaddle[i].h &&
-                this.rectangle.y < this.map.arrPaddle[i].y + this.map.arrPaddle[i].h + 10 &&
-                this.rectangle.x < this.map.arrPaddle[i].x + this.map.arrPaddle[i].w &&
-                this.rectangle.x > this.map.arrPaddle[i].x - this.rectangle.width) {
-                this.rectangle.jumping = false;
-                this.rectangle.y_velocity = 0;
+            } else if (this.rectangle.getY() > this.map.arrPaddle[i].getY() + this.map.arrPaddle[i].getH() &&
+                this.rectangle.getY() < this.map.arrPaddle[i].getY() + this.map.arrPaddle[i].getH() + 10 &&
+                this.rectangle.getX() < this.map.arrPaddle[i].getX() + this.map.arrPaddle[i].getW() &&
+                this.rectangle.getX() > this.map.arrPaddle[i].getX() - this.rectangle.getWidth()) {
+                this.rectangle.setJump(false);
+                this.rectangle.setY_velocity(0);
                 console.log("down");
             }
         }
 
         // -------------- check touching falling objects ----------------
         for (let j = 0; j < this.map.arrFallingObject.length; j++) {
-            if (this.rectangle.x + this.rectangle.width >= this.map.arrFallingObject[j].x &&
-                this.rectangle.x <= this.map.arrFallingObject[j].x + this.map.arrFallingObject[j].w &&
-                this.rectangle.y + this.rectangle.height >= this.map.arrFallingObject[j].y &&
-                this.rectangle.y < this.map.arrFallingObject[j].y + this.map.arrFallingObject[j].h) {
+            if (this.rectangle.getX() + this.rectangle.getWidth() >= this.map.arrFallingObject[j].getX() &&
+                this.rectangle.getX() <= this.map.arrFallingObject[j].getX() + this.map.arrFallingObject[j].getW() &&
+                this.rectangle.getY() + this.rectangle.getHeight() >= this.map.arrFallingObject[j].getY() &&
+                this.rectangle.getY() < this.map.arrFallingObject[j].getY() + this.map.arrFallingObject[j].getH()) {
 
-                this.count = 0;
-                this.score = 0;
-                alert("You Lose");
+                alert("Your score is = " + this.score);
                 window.cancelAnimationFrame(animation);
             }
         }
 
         // ---------------- check score increase by bonus ---------------
-        if (this.rectangle.x + this.rectangle.width >= this.map.bonusObject.x &&
-            this.rectangle.x <= this.map.bonusObject.x + this.map.bonusObject.w &&
-            this.rectangle.y + this.rectangle.height >= this.map.bonusObject.y &&
-            this.rectangle.y < this.map.bonusObject.y + this.map.bonusObject.h) {
+        if (this.rectangle.getX() + this.rectangle.getWidth() >= this.map.bonusObject.getX() &&
+            this.rectangle.getX() <= this.map.bonusObject.getX() + this.map.bonusObject.getW() &&
+            this.rectangle.getY() + this.rectangle.getHeight() >= this.map.bonusObject.getY() &&
+            this.rectangle.getY() < this.map.bonusObject.getY() + this.map.bonusObject.getH()) {
 
             this.count++;
             this.score++;
             console.log("count " + this.count);
             console.log("score " + this.score);
-            this.map.bonusObject.x = Math.random() * (DEFAULT_CANVAS_WIDTH);
-            this.map.bonusObject.y = Math.random() * (DEFAULT_CANVAS_HEIGHT);
+            this.map.bonusObject.setX(Math.random() * DEFAULT_CANVAS_WIDTH);
+            this.map.bonusObject.setY(Math.random() * DEFAULT_CANVAS_HEIGHT);
 
             if (this.count === DEFAULT_COUNT_NEXT_CHALLENGE) {
                 this.map.totalFallingObjects++;
@@ -107,7 +106,7 @@ function GameBoard() {
                 this.count = 0;
             }
             if (this.score === DEFAULT_SCORE_WIN) {
-                alert("you won");
+                alert("Excellence !!!");
                 window.cancelAnimationFrame(animation);
             }
         }

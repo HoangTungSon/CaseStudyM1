@@ -23,8 +23,8 @@ function Mapping() {
     this.createFallingObject = function () {
         for(let i = 1; i < this.totalFallingObjects; i++ ){
             let objFall = new FallObjectCreate(0,-DEFAULT_FALLING_OBJECT_HEIGHT,DEFAULT_FALLING_OBJECT_WIDTH,DEFAULT_FALLING_OBJECT_HEIGHT,0);
-            objFall.x = Math.random()*(DEFAULT_CANVAS_WIDTH);
-            objFall.speed = i*Math.random()*2;
+            objFall.setX(Math.random()*(DEFAULT_CANVAS_WIDTH));
+            objFall.setSpeed(i*Math.random()*2);
             this.arrFallingObject.push(objFall);
         }
     };
@@ -33,9 +33,9 @@ function Mapping() {
         for (let i = TOTAL_NUMBER_OF_PADDLE; i >= 1; i--) {
             for (let j = 1; j < this.numberOfBar; j++) {
                 let obj = new ObjectCreate(0, 0, DEFAULT_OBJECT_WIDTH, DEFAULT_OBJECT_HEIGHT, 0);
-                obj.x = j * Math.random() * DEFAULT_PADDLE_WIDTH;
-                obj.y = (TOTAL_NUMBER_OF_PADDLE + 1 - i) * DEFAULT_PADDLE_HEIGHT;
-                obj.speed = i;
+                obj.setX(j * Math.random() * DEFAULT_PADDLE_WIDTH);
+                obj.setY((TOTAL_NUMBER_OF_PADDLE + 1 - i) * DEFAULT_PADDLE_HEIGHT);
+                obj.setSpeed(i);
                 this.arrPaddle.push(obj);
             }
         }
