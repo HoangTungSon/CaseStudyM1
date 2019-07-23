@@ -4,25 +4,20 @@ const DEFAULT_GRAVITY = 1;
 const DEFAULT_RECTANGLE_WIDTH = 20;
 const DEFAULT_RECTANGLE_HEIGHT = 20;
 const DEFAULT_SCORE_WIN = 25;
-const DEFAULT_COUNT_NEXT_CHALLENGE = 2;
+const DEFAULT_COUNT_NEXT_CHALLENGE = 1;
 
 let context = document.getElementById("gameCanvas").getContext("2d");
-
 let score = 0;
 let count = 0;
 let rectangle = new Rectangle(DEFAULT_RECTANGLE_HEIGHT, false, DEFAULT_RECTANGLE_WIDTH, context.canvas.width / 2, 0, 0, 0);
 let controller = new Controller(false, false, false);
-
-
-function losing() {
-    document.write("You Lose")
-}
+let map = new Mapping();
 
 function gameBoard() {
 
     // ----------------- controlling ------------------
     if (controller.up && rectangle.jumping === true) {
-        rectangle.y_velocity -= DEFAULT_GRAVITY * DEFAULT_RECTANGLE_HEIGHT;
+        rectangle.y_velocity -= DEFAULT_GRAVITY * DEFAULT_RECTANGLE_HEIGHT*2;
         rectangle.jumping = false;
     }
 
@@ -77,7 +72,6 @@ function gameBoard() {
             rectangle.y_velocity = 0;
             console.log("down");
         }
-
     }
 
     // -------------- check touching falling objects ----------------
@@ -108,8 +102,8 @@ function gameBoard() {
         bonusObject.y = Math.random() * (DEFAULT_CANVAS_HEIGHT);
 
         if (count === DEFAULT_COUNT_NEXT_CHALLENGE) {
-            objectFallingIncrease++;
-            createFallingObject(objectFallingIncrease);
+            map.objectFallingIncrease++;
+            map.createFallingObject();
             count = 0;
         }
         if (score === DEFAULT_SCORE_WIN) {
@@ -122,7 +116,7 @@ function gameBoard() {
     displayScore(score, context);
 
     let looping = window.requestAnimationFrame(function () {
-        mapping();
+        map.mapping();
         gameBoard();
     });
 }
@@ -135,7 +129,7 @@ window.addEventListener("keyup", function () {
     controller.keyListener(event);
 });
 window.requestAnimationFrame(function () {
-    mapping();
+    map.mapping();
     gameBoard();
 });
 
