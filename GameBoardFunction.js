@@ -37,11 +37,11 @@ function GameBoard() {
         this.rectangle.setY_velocity(this.rectangle.getY_velocity()*DEFAULT_FRICTION);
 
         // if rectangle is going off the left of the screen
-        if (this.rectangle.getX < -this.rectangle.getWidth()) {
+        if (this.rectangle.getX() < -this.rectangle.getWidth()) {
             this.rectangle.setX(this.context.canvas.width);
 
             // if rectangle goes past right boundary
-        } else if (this.rectangle.getX > this.context.canvas.width) {
+        } else if (this.rectangle.getX() > this.context.canvas.width) {
             this.rectangle.setX(-this.rectangle.getWidth());
         }
 
@@ -82,7 +82,7 @@ function GameBoard() {
                 this.rectangle.getY() + this.rectangle.getHeight() >= this.map.arrFallingObject[j].getY() &&
                 this.rectangle.getY() < this.map.arrFallingObject[j].getY() + this.map.arrFallingObject[j].getH()) {
 
-                alert("Your score is = " + this.score);
+                alert("Your score = " + this.score);
                 window.cancelAnimationFrame(animation);
             }
         }
